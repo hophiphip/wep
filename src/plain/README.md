@@ -48,6 +48,13 @@ make compile
 ```
 
 ## Compile JS/WASM module (without Docker)
+### Setup
+1. Download and install `Emscripten`: https://emscripten.org/docs/getting_started/downloads.html
+2. Go to `emsdk` folder and update `PATH` variable for current shell
+    ```sh
+    source ./emsdk_env.sh
+    ```
+### Compilation
 ```sh
 make module
 ```
