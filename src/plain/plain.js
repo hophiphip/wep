@@ -5930,6 +5930,12 @@ var ASM_CONSTS = {
       GLFW.swapBuffers(winid);
     }
 
+  function _glfwSwapInterval(interval) {
+      interval = Math.abs(interval); // GLFW uses negative values to enable GLX_EXT_swap_control_tear, which we don't have, so just treat negative and positive the same.
+      if (interval == 0) _emscripten_set_main_loop_timing(0/*EM_TIMING_SETTIMEOUT*/, 0);
+      else _emscripten_set_main_loop_timing(1/*EM_TIMING_RAF*/, interval);
+    }
+
   function _glfwTerminate() {
       window.removeEventListener("gamepadconnected", GLFW.onGamepadConnected, true);
       window.removeEventListener("gamepaddisconnected", GLFW.onGamepadDisconnected, true);
@@ -6197,6 +6203,7 @@ var asmLibraryArg = {
   "glfwSetFramebufferSizeCallback": _glfwSetFramebufferSizeCallback,
   "glfwSetWindowShouldClose": _glfwSetWindowShouldClose,
   "glfwSwapBuffers": _glfwSwapBuffers,
+  "glfwSwapInterval": _glfwSwapInterval,
   "glfwTerminate": _glfwTerminate,
   "glfwWindowHint": _glfwWindowHint,
   "setTempRet0": _setTempRet0

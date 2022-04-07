@@ -4,6 +4,8 @@
 #include <emscripten.h>
 #define GL_GLEXT_PROTOTYPES
 #define EGL_EGLEXT_PROTOTYPES
+#else
+#include <glad/glad.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -41,8 +43,10 @@ int main() {
 
     #ifdef __EMSCRIPTEN__
     #else
-         glfwSwapInterval(1);
+        gladLoadGL();
     #endif
+    
+    glfwSwapInterval(1);
 
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, on_window_resize);
