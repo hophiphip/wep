@@ -1,6 +1,5 @@
+import plainWasm from './plain.wasm'; // import .wasm file for bundler to detect it
 import plain from './plain.js';
-
-const Plain = await plain();
 
 /**
  * Start rendering.
@@ -8,16 +7,19 @@ const Plain = await plain();
  * @param {EventListenerOrEventListenerObject} onWebGlContextLost
  */
 export default function render(canvas, onWebGlContextLost) {
-    Plain.canvas = (function () {
-        canvas.addEventListener('webglcontextlost', function (evt) {
-            onWebGlContextLost();
-            evt.preventDefault();
-        }, false);
+    plain().then(Plain => {
+        
+        Plain.canvas = (function () {
+            canvas.addEventListener('webglcontextlost', function (evt) {
+                onWebGlContextLost();
+                evt.preventDefault();
+            }, false);
 
-        return canvas;
-    })();
+            return canvas;
+        })();
 
-    window.Plain = Plain;
+        window.Plain = Plain;
 
-    Plain.callMain();
+        Plain.callMain();
+    });
 }

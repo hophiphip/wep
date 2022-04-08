@@ -15,13 +15,16 @@ OR
 
 - [Docker](https://www.docker.com/)
 
-## Compile JS/WASM module (with Docker)
-1. Make sure you have `Docker` installed.
-2. Compile `JS` module
-```sh
-docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk make module
-``` 
-**Reference**: https://hub.docker.com/r/emscripten/emsdk
+## Quick start
+Build with `Emscripten` installed
+```
+npm run build:local
+```
+
+Build with `Docker`
+```
+npm run build
+```
 
 ## Compile binary (without Docker)
 ### Setup
@@ -46,6 +49,14 @@ Compile executable
 ```sh
 make compile
 ```
+
+## Compile JS/WASM module (with Docker)
+1. Make sure you have `Docker` installed.
+2. Compile `JS` module
+```sh
+docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk make module
+``` 
+**Reference**: https://hub.docker.com/r/emscripten/emsdk
 
 ## Compile JS/WASM module (without Docker)
 ### Setup

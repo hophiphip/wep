@@ -1,6 +1,5 @@
+import triangleWasm from './triangle.wasm'; // import .wasm file for bundler to detect it
 import triangle from './triangle.js';
-
-const Triangle = await triangle();
 
 /**
  * Start rendering.
@@ -8,16 +7,19 @@ const Triangle = await triangle();
  * @param {EventListenerOrEventListenerObject} onWebGlContextLost
  */
 export default function render(canvas, onWebGlContextLost) {
-    Triangle.canvas = (function () {
-        canvas.addEventListener('webglcontextlost', function (evt) {
-            onWebGlContextLost();
-            evt.preventDefault();
-        }, false);
+    triangle().then(Triangle => {
+        
+        Triangle.canvas = (function () {
+            canvas.addEventListener('webglcontextlost', function (evt) {
+                onWebGlContextLost();
+                evt.preventDefault();
+            }, false);
 
-        return canvas;
-    })();
+            return canvas;
+        })();
 
-    window.Triangle = Triangle;
+        window.Triangle = Triangle;
 
-    Triangle.callMain();
+        Triangle.callMain();
+    });
 }

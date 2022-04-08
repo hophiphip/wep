@@ -1,0 +1,12 @@
+{
+  "name": "plain",
+  "version": "1.0.0",
+  "description": "Render plain color to the screen",
+  "main": "index.js",
+  "scripts": {
+    "build": "docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk make module",
+    "build:local": "make module"
+  },
+  "author": "",
+  "license": "ISC"
+}
