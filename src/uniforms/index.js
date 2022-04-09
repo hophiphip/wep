@@ -18,6 +18,10 @@ export default function render(canvas, onWebGlContextLost) {
             return canvas;
         })();
 
+        Uniforms.set_pause    = Uniforms._set_pause;
+        Uniforms.unset_pause  = Uniforms._unset_pause;
+        Uniforms.toggle_pause = Uniforms._toggle_pause;
+
         window.Uniforms = Uniforms;
 
         Uniforms.callMain();

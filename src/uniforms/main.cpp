@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <math.h>
 
+bool pause = false;
+
 const int width  = 800,
           height = 600;
 
@@ -55,7 +57,14 @@ std::function<void()> loop_cycle;
 
 void error_callback(int, const char *);
 void on_window_resize(GLFWwindow *, int , int);
-void process_input(GLFWwindow *);
+
+extern "C" { // https://stackoverflow.com/questions/63877873/emscripten-undefined-exported-function
+    void set_pause();
+    void unset_pause();
+    void toggle_pause();
+}
+
+void key_callback(GLFWwindow*, int, int, int, int);
 void main_loop();
 
 int main() {
@@ -143,25 +152,28 @@ int main() {
         return 4;
     }
 
-    loop_cycle = [&] {
-        process_input(window);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(shader_program);
-
-        float time_value  = glfwGetTime();
-        float green_value = (sin(time_value) / 2.0f) + 0.5f;
-        int vertex_color_location = glGetUniformLocation(shader_program, "vertex_color");
-        glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
-
-        glBindVertexArray(vertex_array_object);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+    loop_cycle = [&] { 
         glfwPollEvents();
-        glfwSwapBuffers(window);
+
+        if (!pause) {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glUseProgram(shader_program);
+
+            float time_value  = glfwGetTime();
+            float green_value = (sin(time_value) / 2.0f) + 0.5f;
+            int vertex_color_location = glGetUniformLocation(shader_program, "vertex_color");
+            glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
+
+            glBindVertexArray(vertex_array_object);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            
+            glfwSwapBuffers(window);
+        }
     };
+
+    glfwSetKeyCallback(window, key_callback);
 
     #ifdef __EMSCRIPTEN__
         emscripten_set_main_loop(main_loop, 0, true);
@@ -191,8 +203,27 @@ void on_window_resize(GLFWwindow *window, const int width, const int height) {
     glViewport(0, 0, width, height);
 }
 
-void process_input(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+void set_pause() {
+    pause = true;
+}
+
+void unset_pause() {
+    pause = false;
+}
+
+void toggle_pause() {
+    pause = !pause;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        #ifdef __EMSCRIPTEN__
+        #else
+            toggle_pause();
+        #endif
     }
 }
