@@ -15,6 +15,6 @@ git add -A
 git commit -m 'deploy'
 
 # deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:hophiphip/wep.git main:gh-pages
+git push -f git@github.com:hophiphip/wep.git master:gh-pages
 
 cd -
