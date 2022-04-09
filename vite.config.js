@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 
-const basePath = '/wep/'
+const basePath = '/'
 
 export default defineConfig({
     optimizeDeps: {
