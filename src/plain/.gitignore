@@ -1,1 +1,9 @@
+# Ignore compiled binary
 main
+
+# Ignore compiled page
+page
+
+# TODO: But you know..I actually need to ignore it later and build it with docker
+# Do not ignore dist - no need to build it later during deploy :)
+!dist

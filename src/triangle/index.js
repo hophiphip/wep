@@ -1,5 +1,5 @@
-import triangleWasm from './triangle.wasm'; // import .wasm file for bundler to detect it
-import triangle from './triangle.js';
+import triangleWasm from './dist/triangle.wasm'; // import .wasm file for bundler to detect it
+import triangle from './dist/triangle.js';
 
 /**
  * Start rendering.

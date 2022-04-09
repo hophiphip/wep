@@ -1,5 +1,5 @@
-import plainWasm from './plain.wasm'; // import .wasm file for bundler to detect it
-import plain from './plain.js';
+import plainWasm from './dist/plain.wasm'; // import .wasm file for bundler to detect it
+import plain from './dist/plain.js';
 
 /**
  * Start rendering.
