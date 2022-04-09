@@ -1,5 +1,7 @@
 # wep
 
+Using `OpenGL` and `C++` in the Web
+
 ## Requirements
 - [NodeJS](https://nodejs.org/en/)
 
