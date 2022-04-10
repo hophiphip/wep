@@ -18,32 +18,21 @@
 
 <body>
     <main>
-        <ul>
-            <li>
-                <h1>Hello Window</h1>
-                <canvas id="plain"></canvas>
-                <p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://learnopengl.com/Getting-started/Hello-Window">Reference</a>
-                </p>
-            </li>
+        <ul x-data="main">
+            <template x-for="renderer in renderers" :key="renderer.id">
+                <li>
+                    <div class="title">
+                        <h1 x-text="renderer.title"></h1>
+                    </div>
 
-            <li>
-                <h1>Hello Triangle</h1>
-                <canvas id="triangle"></canvas>
-                <p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://learnopengl.com/Getting-started/Hello-Triangle">Reference</a>
-                </p>
-            </li>
+                    <canvas x-init="$nextTick(() => { renderer.renderer($el, renderer.onContextLost); });" x-bind:id="renderer.id"></canvas>
 
-            <li>
-                <h1>Uniforms</h1>
-                <canvas id="uniforms"></canvas>
-                <p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://learnopengl.com/Getting-started/Shaders">Reference</a>
-                </p>
-            </li>
+                    <p>
+                        <a target="_blank" rel="noopener noreferrer" x-bind:href="renderer.reference">Reference</a>
+                    </p>
+                </li>
+            </template>
         </ul>
-
     </main>
 </body>
 

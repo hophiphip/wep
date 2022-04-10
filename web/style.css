@@ -7,7 +7,6 @@ html, body {
 main {
     text-align: center;
     margin-top: 2rem;
-    margin-bottom: 2rem;
 }
 
 ul {
@@ -15,8 +14,37 @@ ul {
     list-style-type: none;
 }
 
-canvas {
-    margin-right: auto;
-    margin-left: auto;
+li {
+    width: 100%;
+}
+
+.title {
+    width: 800px;
+    margin: auto;
     display: block;
+    text-align: left;
+}
+
+.title h1 {
+    text-decoration: underline;
+    margin-bottom: 0;
+}
+
+@media all and (max-width: 950px) {
+    .title {
+        width: 70%;
+    }
+}
+
+canvas {
+    width: 800;
+    height: 600;
+    margin: auto;
+    display: block;
+}
+
+@media all and (max-width: 950px) {
+    canvas {
+        width: 70%;
+    }
 }
