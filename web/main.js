@@ -18,6 +18,14 @@ Alpine.data('main', () => ({
             reference: 'https://learnopengl.com/Getting-started/Hello-Window',
             renderer: renderPlain, 
             onContextLost: onWebGlContextPlainColorLost,
+            
+            /**
+             * Called on element initialization.
+             * @param {HTMLElement} element 
+             */
+            onInitialized: function (element) {
+                this.renderer(element, this.onContextLost);
+            },
         }, 
         { 
             id: 'triangle', 
@@ -25,13 +33,29 @@ Alpine.data('main', () => ({
             reference: 'https://learnopengl.com/Getting-started/Hello-Triangle',
             renderer: renderTriangle,
             onContextLost: onWebGlContextTriangleLost,  
+
+            /**
+             * Called on element initialization.
+             * @param {HTMLElement} element 
+             */
+            onInitialized: function (element) {
+                this.renderer(element, this.onContextLost);
+            },
         }, 
         { 
             id: 'uniforms', 
             title: 'Uniforms',
             reference: 'https://learnopengl.com/Getting-started/Shaders', 
             renderer: renderUniforms, 
-            onContextLost: onWebGlContextUniformsLost,  
+            onContextLost: onWebGlContextUniformsLost,
+            
+            /**
+             * Called on element initialization.
+             * @param {HTMLElement} element 
+             */
+            onInitialized: function (element) {
+                this.renderer(element, this.onContextLost);
+            },
         }, 
     ],
 }));
