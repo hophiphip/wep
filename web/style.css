@@ -62,6 +62,7 @@ li {
 .divider {
     width: var(--divider-width);
     border: 0.15rem solid var(--title-color);
+    opacity: 0.6;
     border-radius: 5px;
     margin-top: 0;
 }
