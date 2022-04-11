@@ -1,12 +1,15 @@
 import uniformsWasm from './dist/uniforms.wasm'; // import .wasm file for bundler to detect it
 import uniforms from './dist/uniforms.js';
 
+let pauseUniforms   = () => {};
+let unpauseUniforms = () => {};
+
 /**
  * Start rendering.
  * @param {HTMLElement} canvas 
  * @param {EventListenerOrEventListenerObject} onWebGlContextLost
  */
-export default function render(canvas, onWebGlContextLost) {
+export function render(canvas, onWebGlContextLost) {
     uniforms().then(Uniforms => {
         
         Uniforms.canvas = (function () {
@@ -18,12 +21,19 @@ export default function render(canvas, onWebGlContextLost) {
             return canvas;
         })();
 
-        Uniforms.set_pause    = Uniforms._set_pause;
-        Uniforms.unset_pause  = Uniforms._unset_pause;
-        Uniforms.toggle_pause = Uniforms._toggle_pause;
+        pauseUniforms   = Uniforms._set_pause;
+        unpauseUniforms = Uniforms._unset_pause;
 
         window.Uniforms = Uniforms;
 
         Uniforms.callMain();
     });
+}
+
+export function pause() {
+    pauseUniforms();
+}
+
+export function unpause() {
+    unpauseUniforms();
 }

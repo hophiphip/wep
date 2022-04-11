@@ -2,7 +2,7 @@ import Alpine from 'alpinejs';
 
 import renderPlain from '../src/plain/index.js';
 import renderTriangle from '../src/triangle/index.js';
-import renderUniforms from '../src/uniforms/index.js';
+import { render as renderUniforms, pause as pauseUniforms, unpause as unpauseUniforms } from '../src/uniforms/index.js';
 
 window.Alpine = Alpine; 
 
@@ -49,12 +49,30 @@ Alpine.data('main', () => ({
             renderer: renderUniforms, 
             onContextLost: onWebGlContextUniformsLost,
             
+            isPaused: false,
+
             /**
              * Called on element initialization.
              * @param {HTMLElement} element 
              */
             onInitialized: function (element) {
                 this.renderer(element, this.onContextLost);
+
+                // Pause rendering when canvas is out of view
+                if(!!window.IntersectionObserver) { 
+                    const observer = new IntersectionObserver(function (element, observer) {
+                        if (element.intersectionRatio != 1 && !this.isPaused) {
+                            unpauseUniforms(); // TODO: pause/unpause should be other way around (pause - unpauses, unpause - plays)
+                            this.isPaused = true;
+                        }
+                        else if (this.isPaused) {
+                            pauseUniforms(); // TODO: pause/unpause should be other way around
+                            this.isPaused = false;
+                        }
+                    }, { threshold: 0.7 }); // unpause when 70% is seen
+
+                    observer.observe(element);
+                }
             },
         }, 
     ],
