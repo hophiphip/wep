@@ -62,11 +62,11 @@ Alpine.data('main', () => ({
                 if(!!window.IntersectionObserver) { 
                     const observer = new IntersectionObserver(function (element, observer) {
                         if (element.intersectionRatio != 1 && !this.isPaused) {
-                            unpauseUniforms(); // TODO: pause/unpause should be other way around (pause - unpauses, unpause - plays)
+                            pauseUniforms();
                             this.isPaused = true;
                         }
                         else if (this.isPaused) {
-                            pauseUniforms(); // TODO: pause/unpause should be other way around
+                            unpauseUniforms();
                             this.isPaused = false;
                         }
                     }, { threshold: 0.7 }); // unpause when 70% is seen
