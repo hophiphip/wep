@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import intersect from '@alpinejs/intersect';
 
 import renderPlain from '../src/plain/index.js';
 import renderTriangle from '../src/triangle/index.js';
@@ -9,6 +10,8 @@ window.Alpine = Alpine;
 const onWebGlContextPlainColorLost = function () { alert('WebGL plain color context lost. You will need to reload the page.');   }
 const onWebGlContextTriangleLost   = function () { alert('WebGL triangle color context lost. You will need to reload the page'); }
 const onWebGlContextUniformsLost   = function () { alert('WebGL uniforms context lost. You will need to reload the page');       }
+
+Alpine.plugin(intersect);
 
 Alpine.data('main', () => ({
     renderers: [

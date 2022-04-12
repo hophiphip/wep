@@ -20,15 +20,31 @@
     <main>
         <ul x-data="main">
             <template x-for="renderer in renderers" :key="renderer.id">
-                <li>
-                    <div class="title">
-                        <h1 x-text="renderer.title"></h1>
+                <li 
+                    x-data="{ shown: false }" 
+                    x-intersect:enter="shown = true"
+                    x-intersect:leave="shown = false">
+
+                    <!-- Header title -->
+                    <div 
+                        x-show="shown"
+                        x-transition:enter.duration.500ms
+                        x-transition:leave.duration.400ms>
+                        
+                        <div class="title">
+                            <h1 x-text="renderer.title"></h1>
+                        </div>
+
+                        <hr class="divider" />
                     </div>
 
-                    <hr class="divider" />
+                    <!-- Canvas for renderer -->
+                    <canvas
+                        x-init="$nextTick(() => { renderer.onInitialized($el); });" 
+                        x-bind:id="renderer.id">
+                    </canvas>
 
-                    <canvas x-init="$nextTick(() => { renderer.onInitialized($el); });" x-bind:id="renderer.id"></canvas>
-
+                    <!-- Bottom panel with references and other stuff -->
                     <div class="bottom">
                         <p>
                             <a class="reference" target="_blank" rel="noopener noreferrer" x-bind:href="renderer.reference">
@@ -41,6 +57,7 @@
                             </a>
                         </p>
                     </div>
+                    
                 </li>
             </template>
         </ul>
