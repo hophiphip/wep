@@ -1,4 +1,5 @@
 #include <functional>
+#include <string>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -23,31 +24,34 @@ const float triangle_vertices[] = {
     -0.5f, -0.5f,  0.0f
 };
 
-const char *vertex_shader_src = 
+const std::string gl_version = 
     #ifdef __EMSCRIPTEN__
-    "#version 300 es\n"
+        "#version 300 es\n"
     #else
-    "#version 330 core\n"
+        "#version 330 core\n"
     #endif
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_Position = vec4(aPos, 1.0f);\n"
-    "}\0";
+;
 
-const char *fragment_shader_src = 
-    #ifdef __EMSCRIPTEN__
-    "#version 300 es\n"
-    #else
-    "#version 330 core\n"
-    #endif
-    "precision mediump float;\n"
-    "out vec4 frag_color;\n"
-    "uniform vec4 vertex_color;\n"
-    "void main()\n"
-    "{\n"
-    "    frag_color = vertex_color;\n"
-    "}\n\0"; 
+const std::string vertex_shader_src = gl_version + R""""(
+    layout (location = 0) in vec3 aPos;
+
+    void main()
+    {
+        gl_Position = vec4(aPos, 1.0f);
+    }
+)"""";
+
+const std::string fragment_shader_src = gl_version + R""""(
+    precision mediump float;
+    
+    out vec4 frag_color;
+    uniform vec4 vertex_color;
+    
+    void main()
+    {
+        frag_color = vertex_color;
+    }
+)"""";
 
 const int log_buffer_size = 512;
 
@@ -124,10 +128,13 @@ int main() {
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     shader_program = glCreateProgram();
 
-    glShaderSource(vertex_shader, 1, &vertex_shader_src, NULL);
+    auto vs = vertex_shader_src.c_str(),
+         fs = fragment_shader_src.c_str();
+
+    glShaderSource(vertex_shader, 1, &vs, NULL);
     glCompileShader(vertex_shader);
 
-    glShaderSource(fragment_shader, 1, &fragment_shader_src, NULL);
+    glShaderSource(fragment_shader, 1, &fs, NULL);
     glCompileShader(fragment_shader);
 
     glAttachShader(shader_program, fragment_shader);
@@ -188,6 +195,7 @@ int main() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+    
     return 0;
 }
 
