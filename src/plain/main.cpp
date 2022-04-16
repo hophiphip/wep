@@ -18,14 +18,23 @@ namespace Renderer {
 
     GLFWwindow *window;
 
+    float blue = 0.2f, step = 0.001f;
+
     const std::function<void()> draw = [] {
         glfwPollEvents();
 
         if (!pause) {
-            glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+            glClearColor(0.1f, 0.2f, blue, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             glfwSwapBuffers(window);
+
+            blue += step;
+
+            if (blue > 1.0f || blue < 0.0f) {
+                step = -step;
+                blue += step;
+            }
         }
     };
 

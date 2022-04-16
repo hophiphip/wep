@@ -59,15 +59,14 @@ char log_buffer[log_buffer_size];
 
 std::function<void()> loop_cycle;
 
-void error_callback(int, const char *);
-void on_window_resize(GLFWwindow *, int , int);
-
 extern "C" { // https://stackoverflow.com/questions/63877873/emscripten-undefined-exported-function
     void set_pause();
     void unset_pause();
     void toggle_pause();
 }
 
+void error_callback(int, const char *);
+void on_window_resize(GLFWwindow *, int , int);
 void key_callback(GLFWwindow*, int, int, int, int);
 void main_loop();
 
@@ -195,7 +194,7 @@ int main() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    
+
     return 0;
 }
 
