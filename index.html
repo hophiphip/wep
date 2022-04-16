@@ -41,11 +41,14 @@
                     <!-- Canvas for renderer -->
                     <canvas
                         x-init="$nextTick(() => { renderer.onInitialized($el); });" 
+                        x-intersect:threshold.50="renderer.onEnter?.()"
+                        x-intersect:leave="renderer.onLeave?.()"
                         x-bind:id="renderer.id">
                     </canvas>
 
                     <!-- Bottom panel with references and other stuff -->
                     <div class="bottom">
+                        <!-- Reference stuff -->
                         <p>
                             <a class="reference" target="_blank" rel="noopener noreferrer" x-bind:href="renderer.reference">
                                 <button>
@@ -56,6 +59,20 @@
                                 </button>
                             </a>
                         </p>
+
+                        <!-- Pause toggle button -->
+                        <p x-data="{ shown: renderer.isPaused }" x-show="shown !== undefined">
+                            <button class="pause-toggle">
+                                <svg x-show="!(renderer.isPaused)" x-on:click="renderer.setPause(true)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+
+                                <svg x-show="renderer.isPaused" x-on:click="renderer.setPause(false)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </p>
+
                     </div>
                     
                 </li>

@@ -26,12 +26,19 @@ Alpine.data('main', () => ({
             
             isPaused: true,
 
+            setPause: function (isPaused) {
+                this.isPaused = isPaused;
+                setPausePlain(isPaused);
+            },
+
             onEnter: function () {
+                this.isPaused = false;
                 setPausePlain(false);
             },
 
             onLeave: function () {
                 if (!this.isPaused) {
+                    this.isPaused = true;
                     setPausePlain(true);
                 }
             },
@@ -68,12 +75,20 @@ Alpine.data('main', () => ({
             
             isPaused: true,
 
+            setPause: function (isPaused) {
+                this.isPaused = isPaused;
+                if (isPaused) pauseUniforms();
+                else unpauseUniforms();
+            },
+
             onEnter: function () {
+                this.isPaused = false;
                 unpauseUniforms();
             },
 
             onLeave: function () {
                 if (!this.isPaused) {
+                    this.isPaused = true;
                     pauseUniforms();
                 }
             },
@@ -95,12 +110,20 @@ Alpine.data('main', () => ({
             
             isPaused: true,
 
+            setPause: function (isPaused) {
+                this.isPaused = isPaused;
+                if (isPaused) pauseShaders();
+                else unpauseShaders();
+            },
+
             onEnter: function () {
+                this.isPaused = false;
                 unpauseShaders();
             },
 
             onLeave: function () {
                 if (!this.isPaused) {
+                    this.isPaused = true;
                     pauseShaders();
                 }
             },
