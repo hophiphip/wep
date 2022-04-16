@@ -1,12 +1,14 @@
 import plainWasm from './dist/plain.wasm'; // import .wasm file for bundler to detect it
 import plain from './dist/plain.js';
 
+let setPausePlain = () => {};
+
 /**
  * Start rendering.
  * @param {HTMLElement} canvas 
  * @param {EventListenerOrEventListenerObject} onWebGlContextLost
  */
-export default function render(canvas, onWebGlContextLost) {
+export function render(canvas, onWebGlContextLost) {
     plain().then(Plain => {
         
         Plain.canvas = (function () {
@@ -20,6 +22,16 @@ export default function render(canvas, onWebGlContextLost) {
 
         window.Plain = Plain;
 
+        setPausePlain = Plain._setPause;
+
         Plain.callMain();
     });
+}
+
+/**
+ * Set render pause state.
+ * @param {Boolean} isPaused 
+ */
+export function setPause(isPaused) {
+    setPausePlain(isPaused);
 }

@@ -14,18 +14,27 @@
 namespace Renderer {
     const int width = 800, height = 600;
 
+    bool pause = false;
+
     GLFWwindow *window;
 
     const std::function<void()> draw = [] {
-        glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glfwSwapBuffers(window);
         glfwPollEvents();
+
+        if (!pause) {
+            glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glfwSwapBuffers(window);
+        }
     };
 
-    int initialize_glfw(GLFWerrorfun on_error_callback) {
-        glfwSetErrorCallback(on_error_callback);
+    void setPause(const bool isPaused) {
+        pause = isPaused;
+    }
+
+    int initializeGlfw(GLFWerrorfun onErrorCallback) {
+        glfwSetErrorCallback(onErrorCallback);
 
         if (!glfwInit()) {
             fprintf(stderr, "failed to initialzie glfw\n");
@@ -38,7 +47,7 @@ namespace Renderer {
         return 0;
     }
 
-    int initialize_window() {
+    int initializeWindow() {
         window = glfwCreateWindow(width, height, "GL", NULL, NULL);
 
         if (!window) {
@@ -52,7 +61,7 @@ namespace Renderer {
         return 0;
     }
 
-    void initialize_gl(GLFWframebuffersizefun on_window_resize, GLFWkeyfun on_key_callback) {
+    void initializeGl(GLFWframebuffersizefun onWindowResize, GLFWkeyfun onKeyCallback) {
         #ifdef __EMSCRIPTEN__
         #else
             gladLoadGL();
@@ -61,19 +70,19 @@ namespace Renderer {
         glfwSwapInterval(1);
 
         glViewport(0, 0, width, height);
-        glfwSetFramebufferSizeCallback(window, on_window_resize);
+        glfwSetFramebufferSizeCallback(window, onWindowResize);
 
-        glfwSetKeyCallback(window, on_key_callback);
+        glfwSetKeyCallback(window, onKeyCallback);
     }
 
-    void main_loop() { draw(); };
+    void mainLoop() { draw(); };
 
     void start() {
         #ifdef __EMSCRIPTEN__
-            emscripten_set_main_loop(main_loop, 0, true);
+            emscripten_set_main_loop(mainLoop, 0, true);
         #else
             while (!glfwWindowShouldClose(window)) {
-                main_loop();
+                mainLoop();
             }
         #endif
     }
@@ -84,20 +93,26 @@ namespace Renderer {
     }
 };
 
-void on_error_callback(int, const char *);
-void on_window_resize(GLFWwindow *, int , int);
-void on_key_callback(GLFWwindow*, int, int, int, int);
+extern "C" { // // https://stackoverflow.com/questions/63877873/emscripten-undefined-exported-function
+    void setPause(const bool isPaused) {
+        Renderer::setPause(isPaused);
+    }
+}
+
+void onErrorCallback(int, const char *);
+void onWindowResize(GLFWwindow *, int , int);
+void onKeyCallback(GLFWwindow*, int, int, int, int);
 
 int main() {
-    if (Renderer::initialize_glfw(on_error_callback)) {
+    if (Renderer::initializeGlfw(onErrorCallback)) {
         return 1;
     }
 
-    if (Renderer::initialize_window()) {
+    if (Renderer::initializeWindow()) {
         return 1;
     }
     
-    Renderer::initialize_gl(on_window_resize, on_key_callback);
+    Renderer::initializeGl(onWindowResize, onKeyCallback);
 
     Renderer::start();
     
@@ -106,16 +121,23 @@ int main() {
     return 0;
 }
 
-void on_error_callback(int error, const char *description) {
+void onErrorCallback(int error, const char *description) {
     fprintf(stderr, "Error: %s\n", description);
 }
 
-void on_window_resize(GLFWwindow *window, const int width, const int height) {
+void onWindowResize(GLFWwindow *window, const int width, const int height) {
     glViewport(0, 0, width, height);
 }
 
-void on_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void onKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        #ifdef __EMSCRIPTEN__
+        #else
+            Renderer::setPause(!Renderer::pause);
+        #endif
     }
 }
