@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import intersect from '@alpinejs/intersect';
+import Toast from './ui/toast/toast.js';
 
 import { render as renderPlain, setPause as setPausePlain } from '../src/plain/index.js';
 import renderTriangle from '../src/triangle/index.js';
@@ -7,6 +8,7 @@ import { render as renderUniforms, pause as pauseUniforms, unpause as unpauseUni
 import { render as renderShaders, pause as pauseShaders, unpause as unpauseShaders } from '../src/shaders/index.js';
 
 window.Alpine = Alpine; 
+window.Toast = Toast;
 
 const onWebGlContextPlainColorLost = function () { alert('WebGL plain color context lost. You will need to reload the page.');   }
 const onWebGlContextTriangleLost   = function () { alert('WebGL triangle color context lost. You will need to reload the page'); }
